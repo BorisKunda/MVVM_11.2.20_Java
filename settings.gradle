@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='MVVM_11.2.20.Java'
