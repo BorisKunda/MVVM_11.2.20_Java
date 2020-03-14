@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CountryAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private CountryViewModel countryViewModel;
+    private CountryViewModel mCountryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
         initUi();
 
-        countryViewModel.loadCountriesList();
+        mCountryViewModel.loadCountriesList();
 
-        countryViewModel.getCountryListLD().observe(this, countries -> {
+        mCountryViewModel.getCountryListLD().observe(this, countries -> {
 
             mAdapter.setAdapterData(countries);
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setViewModel() {
-        countryViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(CountryViewModel.class);
+        mCountryViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(CountryViewModel.class);
     }
 
 }

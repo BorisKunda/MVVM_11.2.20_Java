@@ -14,30 +14,27 @@ import java.util.List;
 public class CountryApi {
 
 
-    private RequestQueue requestQueue;
+    private RequestQueue mRequestQueue;
     private final static String GET_ALL_COUNTRIES_URL = "https://restcountries.eu/rest/v2/all";
-    private List<Country> countryList;
+    private List<Country> mCountryList;
 
-    public CountryApi(Application application) {
-        requestQueue = Volley.newRequestQueue(application);
+    public CountryApi (Application application) {
+        mRequestQueue = Volley.newRequestQueue(application);
     }
 
-    public List<Country> getCountryList(OnServerResponseListener onServerResponseListener) {
+    public List<Country> getCountryList (OnServerResponseListener onServerResponseListener) {
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, GET_ALL_COUNTRIES_URL,
                 null,
-                response -> {
-                    onServerResponseListener.OnServerResponse(true, response);
-                },
+                response -> onServerResponseListener.OnServerResponse(true, response),
 
-                error -> {
-                    onServerResponseListener.OnServerResponse(false, null);
-                }
+                error -> onServerResponseListener.OnServerResponse(false, null)
 
         );
 
-        requestQueue.add(jsonArrayRequest);
+        mRequestQueue.add(jsonArrayRequest);
 
-        return countryList;
+        return mCountryList;
     }
+
 }

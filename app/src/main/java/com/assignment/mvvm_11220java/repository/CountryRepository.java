@@ -6,38 +6,57 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.assignment.mvvm_11220java.model.Country;
 import com.assignment.mvvm_11220java.network.CountryApi;
+import com.assignment.mvvm_11220java.network.OnServerResponseListener;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CountryRepository {
 
-    private MutableLiveData<List<Country>> countryListMLD;
-    private CountryApi countryApi;
-    private Application application;
+    private MutableLiveData<List<Country>> mCountryListMLD;
+    private static CountryRepository mCountryRepository = null;
+    private CountryApi mCountryApi;
+    private Application mApplication;
 
-    public CountryRepository(Application application) {
-        countryApi = new CountryApi(application);
-        this.application = application;
+    private CountryRepository (Application iApplication) {
+        mCountryApi = new CountryApi(iApplication);
     }
 
-    public MutableLiveData<List<Country>> getCountryListMLD() {
+    public static CountryRepository getCountryRepository (Application iApplication) {
 
-        if (countryListMLD == null) {
-            countryListMLD = new MutableLiveData<>();
+        if (mCountryRepository == null) {
+            mCountryRepository = new CountryRepository(iApplication);
         }
 
-        return countryListMLD;
+        return mCountryRepository;
     }
 
-    public void loadCountriesListFromApi() {
-        countryApi.getCountryList((isSuccess, response) -> {
+    public MutableLiveData<List<Country>> getCountryListMLD () {
 
-            Gson gson = new Gson();
-            Country[] countries = gson.fromJson(String.valueOf(response), Country[].class);
-            countryListMLD.setValue(Arrays.asList(countries));
+        if (mCountryListMLD == null) {
+            mCountryListMLD = new MutableLiveData<>();
+        }
 
+        return mCountryListMLD;
+    }
+
+    public void loadCountriesListFromApi () {
+
+        mCountryApi.getCountryList(new OnServerResponseListener() {
+
+            @Override
+            public void OnServerResponse (boolean isSuccess, JSONArray response) {
+
+                if (isSuccess) {
+                    Gson gson = new Gson();
+                    Country[] countries = gson.fromJson(String.valueOf(response), Country[].class);
+                    mCountryListMLD.setValue(Arrays.asList(countries));
+                }
+
+            }
         });
     }
 

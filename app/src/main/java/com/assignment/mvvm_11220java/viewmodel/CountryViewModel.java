@@ -13,19 +13,19 @@ import java.util.List;
 
 public class CountryViewModel extends AndroidViewModel {
 
-    private CountryRepository countryRepository;
+    private CountryRepository mCountryRepository;
 
     public CountryViewModel(@NonNull Application application) {
         super(application);
-        countryRepository = new CountryRepository(application);
+        mCountryRepository = CountryRepository.getCountryRepository(application);
     }
 
     public LiveData<List<Country>> getCountryListLD() {
-        return countryRepository.getCountryListMLD();
+        return mCountryRepository.getCountryListMLD();
     }
 
     public void loadCountriesList() {
-        countryRepository.loadCountriesListFromApi();
+        mCountryRepository.loadCountriesListFromApi();
     }
 
 }
