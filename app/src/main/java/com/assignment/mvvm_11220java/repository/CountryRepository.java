@@ -22,10 +22,10 @@ public class CountryRepository {
     private Application mApplication;
 
     private CountryRepository (Application iApplication) {
-        mCountryApi = new CountryApi(iApplication);
+        mCountryApi = CountryApi.getCountryApi(iApplication);
     }
 
-    public static CountryRepository getCountryRepository (Application iApplication) {
+    synchronized public static CountryRepository getCountryRepository (Application iApplication) {
 
         if (mCountryRepository == null) {
             mCountryRepository = new CountryRepository(iApplication);
@@ -45,18 +45,14 @@ public class CountryRepository {
 
     public void loadCountriesListFromApi () {
 
-        mCountryApi.getCountryList(new OnServerResponseListener() {
+        mCountryApi.getCountryList((isSuccess, response) -> {
 
-            @Override
-            public void OnServerResponse (boolean isSuccess, JSONArray response) {
-
-                if (isSuccess) {
-                    Gson gson = new Gson();
-                    Country[] countries = gson.fromJson(String.valueOf(response), Country[].class);
-                    mCountryListMLD.setValue(Arrays.asList(countries));
-                }
-
+            if (isSuccess) {
+                Gson gson = new Gson();
+                Country[] countries = gson.fromJson(String.valueOf(response), Country[].class);
+                mCountryListMLD.setValue(Arrays.asList(countries));
             }
+
         });
     }
 

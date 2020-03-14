@@ -17,9 +17,19 @@ public class CountryApi {
     private RequestQueue mRequestQueue;
     private final static String GET_ALL_COUNTRIES_URL = "https://restcountries.eu/rest/v2/all";
     private List<Country> mCountryList;
+    private static CountryApi mCountryApi = null;
 
-    public CountryApi (Application application) {
+    private CountryApi (Application application) {
         mRequestQueue = Volley.newRequestQueue(application);
+    }
+
+    synchronized public static CountryApi getCountryApi (Application iApplication) {
+
+        if (mCountryApi == null) {
+            mCountryApi = new CountryApi(iApplication);
+        }
+
+        return mCountryApi;
     }
 
     public List<Country> getCountryList (OnServerResponseListener onServerResponseListener) {
